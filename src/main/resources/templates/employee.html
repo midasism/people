@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>入职管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/style/login.css}" media="all">
+</head>
+<body>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/lib/jquery.js}"></script>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#test'
+            , url: '/employee/getInEmployee'
+            ,sync: true
+            , cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'id', title: '序号',width:60}
+                    , {field: 'job_id', title: '员工工号' ,width:100,sort: true}
+                    , {field: 'name', title: '姓名', edit: 'text',width:100}
+                    , {field: 'sex', title: '性别', edit: 'text',width:80, sort: true}
+                    , {field: 'identity', title: '身份证', edit: 'text'}
+                    , {field: 'email', title: '邮箱', edit: 'text'}
+                    , {field: 'phone', title: '手机号', edit: 'text'}
+                    , {field: 'department', title: '部门',width:100}
+                    , {field: 'position', title: '职位'}
+                ]
+            ],
+            // even : true,
+            page: true, //是否显示分页
+            toolbar: true,
+            limits: [3, 5, 10]  //一页选择显示3,5或10条数据
+            , limit: 10  //一页显示10条数据
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                var result;
+                if (this.page.curr) {
+                    result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                } else {
+                    result = res.data.slice(0, this.limit);
+                }
+
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": result //解析数据列表
+                };
+            }
+        });
+
+        //监听单元格编辑
+        table.on('edit(test)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+
+        });
+
+        //监听行工具事件
+        // table.on('tool(test)', function (obj) {
+        //     var data = obj.data;
+        //     if (obj.event === 'edit') {
+        //         layer.confirm('确定提交审批吗', function (index) {
+        //             obj.del();
+        //             $.ajax({
+        //                 url: '/employee/stateUpdate',    //请求的url地址
+        //                 // dataType: "json",   //返回格式为json
+        //                 async: true,//请求是否异步，默认为异步，这也是ajax重要特性
+        //                 data: {"id": data.job_id},    //参数值
+        //                 type: "GET",   //请求方式
+        //             });
+        //             layer.close(index);
+        //         });
+        //     }
+        // });
+    });
+</script>
+</body>
+</html>

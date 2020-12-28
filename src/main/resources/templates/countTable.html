@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<style>
+    .runs-paginator-flex-container {
+        flex: 1 1 auto;
+        flex-direction: row-reverse;
+        display: flex;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+
+    <title></title>
+
+</head>
+
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div>
+<div id="main" style="width: 500px;height:400px;float: left"></div>
+<div id="main1" style="width: 500px;height:400px;float: left"></div>
+</div>
+<div id="main2" style="width: 600px;height:500px;float: left"></div>
+
+<script th:src="@{/lib/echarts.js}"></script>
+<script th:src="@{/lib/jquery.js}"></script>
+<script type="text/javascript">
+    var not;    //类别数组（实际用来盛放X轴坐标值）
+    var normal;    //销量数组（实际用来盛放Y坐标值）
+
+    $.ajax({
+        type : "get",
+        async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        url : "/count/getTable",    //请求发送到TestServlet处
+        data : {},
+        dataType : "json",        //返回数据形式为json
+        success : function(result) {
+            not=result.No;
+            normal=result.Normal;
+            var option = {
+                title: {
+                    text: '考勤数据总览',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['正常考勤', '缺勤']
+                },
+                series: [
+                    {
+                        name: '考勤状态',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: [
+                            {value: not, name: '缺勤'},
+                            {value: normal, name: '正常考勤'},
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            //初始化echarts实例
+            var myChart = echarts.init(document.getElementById('main'));
+
+            //使用制定的配置项和数据显示图表
+            myChart.setOption(option);
+
+        },
+        error : function(errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart.hideLoading();
+        }
+    })
+
+            var option1 = {
+                title: {
+                    text: '各部门人数总览',
+                    left: 'center'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['运营部','技术部','人事部']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [20, 60, 20],
+                    type: 'bar',
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: 'rgba(220, 220, 220, 0.8)'
+                    }
+                }]
+            };
+
+            //初始化echarts实例
+            var myChart = echarts.init(document.getElementById('main1'));
+
+            //使用制定的配置项和数据显示图表
+            myChart.setOption(option1);
+
+    var option2 = {
+        title: {
+            text: '各岗位人数总览',
+            left: 'center'
+        },
+        xAxis: {
+            type: 'category',
+            data: ['项目经理','产品经理','Java工程师','Python工程师','架构师','测试工程师','前端工程师'],
+            axisLabel:{
+                interval:0
+            }
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: [5, 8,20,10,10,6,10 ],
+            type: 'bar',
+            showBackground: true,
+            backgroundStyle: {
+                color: 'rgba(220, 220, 220,0.8)'
+            }
+        }]
+    };
+
+    //初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main2'));
+
+    //使用制定的配置项和数据显示图表
+    myChart.setOption(option2);
+
+
+</script>
+
+</body>
+</html>

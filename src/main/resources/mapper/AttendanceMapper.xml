@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.people.mapper.AttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.people.pojo.Attendance">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="job_id" jdbcType="INTEGER" property="jobId" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="arrival_time" jdbcType="TIMESTAMP" property="arrivalTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `time`, job_id, `state`, arrival_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from attendance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from attendance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.people.pojo.Attendance" useGeneratedKeys="true">
+    insert into attendance (`time`, job_id, `state`,
+      arrival_time)
+    values (#{time,jdbcType=TIMESTAMP}, #{jobId,jdbcType=INTEGER}, #{state,jdbcType=INTEGER},
+      #{arrivalTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.people.pojo.Attendance" useGeneratedKeys="true">
+    insert into attendance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="time != null">
+        `time`,
+      </if>
+      <if test="jobId != null">
+        job_id,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="arrivalTime != null">
+        arrival_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobId != null">
+        #{jobId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="arrivalTime != null">
+        #{arrivalTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.people.pojo.Attendance">
+    update attendance
+    <set>
+      <if test="time != null">
+        `time` = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobId != null">
+        job_id = #{jobId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="arrivalTime != null">
+        arrival_time = #{arrivalTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.people.pojo.Attendance">
+    update attendance
+    set `time` = #{time,jdbcType=TIMESTAMP},
+      job_id = #{jobId,jdbcType=INTEGER},
+      `state` = #{state,jdbcType=INTEGER},
+      arrival_time = #{arrivalTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateTime" parameterType="com.people.pojo.Attendance">
+    update attendance
+    <set>
+      <if test="time != null">
+        `time` = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where job_id = #{jobId,jdbcType=INTEGER} and arrival_time = #{arrivalTime,jdbcType=TIMESTAMP}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from attendance
+  </select>
+
+  <select id="selectNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select
+    count(*)
+    from attendance
+    where state = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

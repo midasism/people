@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--核心配置文件-->
+<configuration>
+    <properties resource="db.properties"/>
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+<!--        <setting name="cacheEnabled" value="true"/>-->
+<!--        驼峰自动转化-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <!--        package:包路径 默认别名是类名 开头字母小写 比如user-->
+        <!--        <package name="pojo"/>-->
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--    每个Mapper.xml都需要在MyBatis核心配置文件注册-->
+    <mappers>
+        <mapper resource="mapper/AttendanceMapper.xml"/>
+        <mapper resource="mapper/DimissionMapper.xml"/>
+        <mapper resource="mapper/DepartmentMapper.xml"/>
+        <mapper resource="mapper/EmployeeMapper.xml"/>
+        <mapper resource="mapper/NoticeMapper.xml"/>
+        <mapper resource="mapper/OfficeMapper.xml"/>
+        <mapper resource="mapper/PositionMapper.xml"/>
+        <mapper resource="mapper/SalaryMapper.xml"/>
+        <mapper resource="mapper/WorkMapper.xml"/>
+    </mappers>
+</configuration>

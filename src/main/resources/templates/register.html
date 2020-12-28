@@ -1,0 +1,121 @@
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>注册 - layuiAdmin</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+  <link rel="stylesheet" th:href="@{/style/admin.css}" media="all">
+  <link rel="stylesheet" th:href="@{/style/login.css}" media="all">
+</head>
+<body>
+
+
+  <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+    <form class="layui-form" action="/register/user" method="post">
+    <div class="layadmin-user-login-main">
+      <div class="layadmin-user-login-box layadmin-user-login-header">
+        <h2>人事管理系统</h2>
+      </div>
+      <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone" for="LAY-user-login-cellphone"></label>
+          <input type="text" name="cellphone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="手机" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-row">
+            <div class="layui-col-xs7">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+              <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" class="layui-input">
+            </div>
+            <div class="layui-col-xs5">
+              <div style="margin-left: 10px;">
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode">获取验证码</button>
+              </div>
+            </div>
+          </div>
+        </div>
+		<div class="layui-form-item">
+		  <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+		  <input type="email" name="email" id="LAY-user-login-email" lay-verify="email" placeholder="邮箱" class="layui-input">
+		</div>
+		<div class="layui-form-item">
+		  <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+		  <input type="text" name="identity" id="LAY-user-login-identity" lay-verify="identity" placeholder="身份证号" class="layui-input">
+		</div>
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+          <input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-repass"></label>
+          <input type="password" name="repass" id="LAY-user-login-repass" lay-verify="required" placeholder="确认密码" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-nickname"></label>
+          <input type="text" name="nickname" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="昵称" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+        </div>
+        <div class="layui-form-item">
+          <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit">注 册</button>
+        </div>
+        <div class="layui-trans layui-form-item layadmin-user-login-other">
+          <a href="login" class="a">用已有帐号登入</a>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+
+  <script th:src="@{/layui/layui.js}"></script>
+  <script>
+  layui.config({
+    base: '/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'user'], function(){
+    var $ = layui.$
+    ,setter = layui.setter
+    ,admin = layui.admin
+    ,form = layui.form
+    ,router = layui.router();
+    form.render();
+
+    //发送验证码
+    $("#LAY-user-getsmscode").click(function () {
+      var time = 30;
+      $("#LAY-user-getsmscode").attr("disabled", true);
+      $.ajax({
+        url: "/register/sendSms",
+        data: {
+          'tel': $("#LAY-user-login-cellphone").val()
+        },
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+          if (data == "ok") {
+            alert("发送成功");
+          } else alert("发送失败");
+        }
+      });
+      //定时器
+      var timer = setInterval(function () {
+        if (time == 0) {
+          clearInterval(timer);
+          $("#LAY-user-getsmscode").attr("disabled", false);
+          $("#LAY-user-getsmscode").html("重新获取验证码");
+        } else {
+          time--;
+        }
+      }, 1000);
+    });
+  });
+  </script>
+</body>
+</html>

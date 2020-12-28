@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.people.mapper.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="com.people.pojo.Employee">
+    <!--@Table employee-->
+    <id column="job_id" jdbcType="INTEGER" property="jobId" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="identity" jdbcType="VARCHAR" property="identity" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="hiredate" jdbcType="TIMESTAMP" property="hiredate" />
+    <result column="job_status" jdbcType="INTEGER" property="jobStatus" />
+    <result column="enabled" jdbcType="OTHER" property="enabled" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    job_id, `password`, `name`, sex, `identity`, email, phone, hiredate, job_status,
+    enabled, `level`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from employee
+    where job_id = #{jobId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from employee
+    where job_id = #{jobId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="job_id" keyProperty="jobId" parameterType="com.people.pojo.Employee" useGeneratedKeys="true">
+    insert into employee (`password`, `name`, sex,
+      `identity`, email, phone,
+      hiredate, job_status, enabled,
+      `level`)
+    values (#{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+      #{identity,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+      #{hiredate,jdbcType=TIMESTAMP}, #{jobStatus,jdbcType=INTEGER}, #{enabled,jdbcType=OTHER},
+      #{level,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="job_id" keyProperty="jobId" parameterType="com.people.pojo.Employee" useGeneratedKeys="true">
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="identity != null">
+        `identity`,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="hiredate != null">
+        hiredate,
+      </if>
+      <if test="jobStatus != null">
+        job_status,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+      <if test="level != null">
+        `level`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="identity != null">
+        #{identity,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="hiredate != null">
+        #{hiredate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobStatus != null">
+        #{jobStatus,jdbcType=INTEGER},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=OTHER},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.people.pojo.Employee">
+    update employee
+    <set>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="identity != null">
+        `identity` = #{identity,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="hiredate != null">
+        hiredate = #{hiredate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobStatus != null">
+        job_status = #{jobStatus,jdbcType=INTEGER},
+      </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=OTHER},
+      </if>
+      <if test="level != null">
+        `level` = #{level,jdbcType=INTEGER},
+      </if>
+    </set>
+    where job_id = #{jobId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.people.pojo.Employee">
+    update employee
+    set `password` = #{password,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      `identity` = #{identity,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      hiredate = #{hiredate,jdbcType=TIMESTAMP},
+      job_status = #{jobStatus,jdbcType=INTEGER},
+      enabled = #{enabled,jdbcType=OTHER},
+      `level` = #{level,jdbcType=INTEGER}
+    where job_id = #{jobId,jdbcType=INTEGER}
+  </update>
+
+    <insert id="register" parameterType="map">
+      insert into employee(password,name,identity,email,phone,level,enabled,job_status,sex,hiredate) values(#{password},#{name},#{identity},#{email},#{phone},#{level},#{enabled},#{job_status},#{sex},#{hiredate})
+    </insert>
+
+  <select id="selectByStatus" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from employee where job_status = #{status}
+  </select>
+
+  <select id="selectByName" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select job_id from employee where name = #{name}
+  </select>
+</mapper>
