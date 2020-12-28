@@ -22,7 +22,7 @@ public class SendSmsUtil {
     private StringRedisTemplate stringRedisTemplate;
 
     public boolean SendSms(String phone, String code) {
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4FzoYXPqh2z3m47yXE5k", "IsynR3xS2vNVOJnz4OYBE1WGtAV1GH");
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "", "IsynR3xS2vNVOJnz4OYBE1WGtAV1GH");
         IAcsClient client = new DefaultAcsClient(profile);
         CommonRequest request = new CommonRequest();
         request.setMethod(MethodType.POST);
